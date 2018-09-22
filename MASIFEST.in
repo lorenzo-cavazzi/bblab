@@ -1,0 +1,10 @@
+include LICENSE
+include *.txt
+include *.md
+include Makefile
+include *.py
+include docs*
+
+exclude .git*
+exclude .travis*
+exclude *.pyc
