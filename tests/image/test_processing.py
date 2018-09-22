@@ -35,15 +35,15 @@ class TestProcessing(unittest.TestCase):
     # @unittest.expectedFailure
     # also available: @unittest.skip(reason) and @unittest.skipIf(condition, reason)
     def test_check_images_availability(self):
-        self.assertEqual(len(os.listdir(Path(FOLDER_CHANNELS))), 3,
+        self.assertEqual(len(os.listdir(str(Path(FOLDER_CHANNELS)))), 3,
                 "Channels images not available for tests")
-        self.assertEqual(len(os.listdir(Path(FOLDER_OVERLAY))), 1,
+        self.assertEqual(len(os.listdir(str(Path(FOLDER_OVERLAY)))), 1,
                 "Overlay image not available for tests")
-        # self.assertEqual(len(os.listdir(Path(FOLDER_MASK))), 1,
+        # self.assertEqual(len(os.listdir(str(Path(FOLDER_MASK)))), 1,
         #         "Mask image not available for tests")
-        # self.assertEqual(len(os.listdir(Path(FOLDER_HIGHLIGHT))), 1,
+        # self.assertEqual(len(os.listdir(str(Path(FOLDER_HIGHLIGHT)))), 1,
         #         "Highlight image not available for tests")
-        # self.assertEqual(len(os.listdir(Path(FOLDER_MEAN))), 1,
+        # self.assertEqual(len(os.listdir(str(Path(FOLDER_MEAN)))), 1,
         #         "Mean Csv not available for tests")
 
     def test_get_filenames_from_folder(self):
