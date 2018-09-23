@@ -15,6 +15,7 @@ import unittest
 import platform
 import numpy
 import cv2
+import csv
 from bblab.image import processing
 from pathlib import Path
 
@@ -71,6 +72,11 @@ class TestProcessing(unittest.TestCase):
             filename_manual = r"data/1o_overlay/fakename.tiff"
         self.assertEqual(str(filename_function), filename_manual)
 
+    def test_get_channel_mean(self):
+        temp_array = numpy.array([[100, 200, 300], [100, 200, 300], [100, 200, 300]], numpy.uint16)
+        temp_mask = numpy.array([[True, False, False], [True, False, False], [True, False, False]])
+        self.assertEqual(processing._get_channel_mean(temp_array, temp_mask), 100)
+
     # TODO: using Pillow to load images to be compared? Would it be a double check?
     def test_overlay_channels(self):
         image_processed = processing.overlay_channels(FOLDER_CHANNELS, False, return_image = True)
@@ -84,9 +90,13 @@ class TestProcessing(unittest.TestCase):
         image_loaded = cv2.imread(str(files_loaded[0]), cv2.IMREAD_UNCHANGED)
         self.assertTrue((image_processed == image_loaded).all())
         
-    @unittest.expectedFailure
     def test_compute_mean(self):
-        self.assertRaises(processing.compute_mean(), "Update the test, it is a placeholder for a not-already-implemented function")
+        data_processed = processing.compute_mean(FOLDER_HIGHLIGHT, False, True)
+        data_processed_stringified = [{k: str(v) for k, v in row.items()} for row in data_processed]
+        file_paths = processing._get_filenames_from_folder(FOLDER_MEAN)
+        with open(str(file_paths[0]), "r", newline="") as file_reader:
+            data_loaded = [{k: v for k, v in row.items()} for row in csv.DictReader(file_reader, skipinitialspace=True)]
+        self.assertEqual(data_processed_stringified, data_loaded)
 
 # if __name__ == "__main__":
 #     unittest.main()

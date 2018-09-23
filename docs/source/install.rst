@@ -1,4 +1,84 @@
 Install
 =======
 
-Install instructions
+Here you can find different install procedures. Please choose the one that best fits
+your needs. The Quick start section takes advantage of `pip` package manager to
+install the library and all its dependencies in a convenient way.
+
+Prerequisites
+-------------
+
+The library requires Python 3.4+. You can download it from
+`Python website <https://www.python.org/downloads>`_ or from your system package
+manager.
+
+If you are working on Linux, chances are that Python 3 is already installed. Check
+your version by typing
+
+>>> python --version
+Python 3.6.5
+
+In some Linux distributions (like `Ubuntu <https://www.ubuntu.com/>`_ 18.04) you
+can use Python 3 by invoking `python3` instead of `python`. This helps to maintain
+compatibility with legacy software which expect `python` to invoke Python 2.
+
+>>> python --version
+Command 'Python' not found
+>>> python3 --version
+Python 3.6.5
+
+Quick start
+-----------
+
+The easiest way to install bblab library is to use `pip`. It will automatically download
+the last bblab package from `Github repository <https://github.com/lorenzo-cavazzi/bblab>`_
+and install it locally, along with any required dependency.
+
+>>> pip install git+https://github.com/lorenzo-cavazzi/bblab.git
+
+Pip should be already installed in any system with Python 3.4+. You can check it by
+typing
+
+>>> pip --version
+pip 18.0 from [...]
+
+In some Linux distributions (like Ubuntu 18.04) you can use pip by invoking `pip3`
+instead of `pip`.
+
+If `Git <https://git-scm.com/>`_ is not installed on your system you will get an error
+like this
+
+>>> pip install git+https://github.com/lorenzo-cavazzi/bblab.git
+Collecting [...]
+Downloading [...]
+Error: cannot unpack file [...]
+
+If you don't want to install git, you can manually download and unzip the library.
+Please refer to the following section.
+
+Advanced 
+-----------
+
+An advanced user may be interested in installing the library manually. Follow these
+steps:
+
+
+#. Download the library from `Github repository <https://github.com/lorenzo-cavazzi/bblab>`_ and unzip it. From Linux you can use these commands
+
+    >>> wget https://github.com/lorenzo-cavazzi/bblab/archive/master.zip
+    >>> unzip master.zip
+    >>> cd bblab-master
+
+#. Compile the library
+
+    >>> python setup.py sdist
+
+#. Install the archive. Adjust file name according to the version
+
+    >>> pip install dist/bblab-0.1.tar.gz
+
+#. Cleanup. From Linux you can use these commands
+
+    >>> cd..
+    >>> rm master.zip
+    >>> rm bblab-master -r

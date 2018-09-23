@@ -5,6 +5,7 @@ import os
 import logging
 import numpy
 import cv2
+import csv
 from pathlib import Path
 
 # TODO: Logging should be implemented at module level. It has temporary been added
@@ -21,9 +22,8 @@ def set_log_level(level = logging.WARNING):
     """
     log.setLevel(level)
 
-
 def overlay_channels(input_folder = None, output_folder = None, return_image = False,
-        maximize_intensity = True, **kwargs):
+        maximize_intensity = False, **kwargs):
     """Overlay 3 single channel Tiff images in a RGB image. The finaly image may be
     returned as a numpy array and/or saved as a Png file.
     Input images are supposed to be 8 or 16 bit single channel scans from a microscope.
@@ -148,7 +148,6 @@ def overlay_channels(input_folder = None, output_folder = None, return_image = F
         log.info("writing file '{file}'".format(file = str(overlay_file)))
     if return_image:
         return overlay_image
-
 
 def highlight_cells(input_folder_rgb = None, input_folder_mask = None,
         output_folder = None, return_image = False, cells_highlight = 0, **kwargs):
@@ -298,14 +297,16 @@ def compute_mean(input_folder = None, output_folder = None, return_data = False,
     Args:
         input_folder (str): folder path containing the Png RGBA image. If None,
             the current folder is used.
-            This parameter is ignored when `input_file` is provided.
+            This parameter is ignored when `input_file` or `input_data` is provided.
         output_folder (str): folder path where output Csv will be saved. If None, the
             current folder is used. If False, output won't be saved (useful when
             `return_data` is True).
             This parameter is ignored when `output_file` is provided.
         return_data (bool): defines if data are returned. Can't be False if an output
             file or folder is not provided.
-        **input_file (str): input Png RGBA path
+        **input_file (str): input Png RGBA path. This parameter is ignored when
+            `input_data` is provided.
+        **input_data (str): numpy array with the Png RGBA image data.
         **output_file (str): output Csv path. If it doesn't end with .csv, the
             extension will be added.
         
@@ -323,11 +324,68 @@ def compute_mean(input_folder = None, output_folder = None, return_data = False,
         >>> highlight_cells(input_file_rgb="overlay_rgb.png",
     """
     
-    print("compute_mean stub")
-    raise NotImplementedError
+    # get input RGBA image
+    rgba_image = None
+    if "input_data" in kwargs:
+        rgba_image = kwargs["input_data"]
+    elif "input_file" in kwargs:
+        rgba_files = _get_validated_filenames(kwargs["input_file"])
+    else:
+        if input_folder is None:
+            input_folder = "."
+        rgba_files = _get_filenames_from_folder(input_folder)
+    if rgba_image is None:
+        if len(rgba_files) != 1:
+            raise ValueError("1 rgb file expected, {num} found".format(num=str(len(rgba_files))))
+        if rgba_files[0].suffix != ".png":
+            raise ValueError("only .png extension is accepted")
+        log.info("working on the following rgba file: {name}".format(name=str(rgba_files[0].absolute())))
+        rgba_image = cv2.imread(str(rgba_files[0]), cv2.IMREAD_UNCHANGED)
+    
+    # compute channels means
+    channel_b, channel_g, channel_r, channel_a = cv2.split(rgba_image)
+    cell_ids = list(numpy.unique(channel_a))
+    cell_ids.sort()
+    if (cell_ids[0] == 0):
+        del cell_ids[0]
+    cell_means = []
+    for cell_id in cell_ids:
+        mean_r = _get_channel_mean(channel_r, channel_a == cell_id)
+        mean_g = _get_channel_mean(channel_g, channel_a == cell_id)
+        mean_b = _get_channel_mean(channel_b, channel_a == cell_id)
+        # cell_means.append((cell_id, mean_r, mean_g, mean_b))
+        cell_means.append({ "cell_id": cell_id, "red": mean_r, "green": mean_g, "blue": mean_b})
 
+    # save and/or return values
+    if "output_file" in kwargs:
+        mean_file = _validate_filename(kwargs["output_file"], ".csv")
+    elif output_folder is not False:
+        if (output_folder is None):
+            output_folder = "."
+        mean_file = _build_validated_filename(output_folder, "cell_means.csv")
+    else:
+        mean_file = None
+    if mean_file is not None:
+        keys = cell_means[0].keys()
+        with open(str(mean_file), "w", newline="") as output_file:
+            dict_writer = csv.DictWriter(output_file, fieldnames = keys)
+            dict_writer.writeheader()
+            dict_writer.writerows(cell_means)
+            log.info("writing file '{file}'".format(file = str(mean_file)))
+    if return_data:
+        return cell_means
 
 # Auxiliary functions to get/write data
+def _get_channel_mean(channel, mask, round_decimal = 2):
+    """get a numpy array n*m and a mask (bit) of the same size. Compute the mean
+    of values in the array not filtered by the mask
+    """
+    channel_masked = channel * mask
+    mean = numpy.mean(channel_masked[channel_masked > 0])
+    if str(mean) == "nan":
+        return 0
+    return round(mean, round_decimal)
+
 def _get_filenames_from_folder(folder):
     """get the `folder` str, checks and returns children as list of Path
     instances."""

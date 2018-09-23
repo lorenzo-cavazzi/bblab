@@ -4,6 +4,11 @@ tmp*
 # Editor related files
 .vscode
 
+# Sphinx docs
+docs/source/_build
+docs/source/_static
+docs/source/_templates
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -3,15 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to bblab's documentation!
+bblab documentation
 =================================
+
+Greetings! This is the bblab library documentation. Enjoy reading it and forgive some
+misspellings.
 
 Introduction
 ------------
 
-bblab is a Python package containing utilities to process and analyze images.
+bblab is a Python package containing functions to process and analyze images.
 In this first release the focus is on a few image processing algorithms, according
-to the tasks in the "2018 assignement"
+to the tasks in the "2018 assignment".
 
 Library structure
 `````````````````
@@ -22,8 +25,8 @@ that.
 
 Function parameters
 ```````````````````
-The library should be flexible, and this means every function has a number of parameters.
-The most relevant are defined as named argument, while all other are handled by the
+The library should be flexible, and this means every function has lots of parameters.
+The most relevant are defined as named arguments, while all other are handled by the
 **kwargs argument.  
 Please check single function descriptions to know the full list of available parameters.
 
@@ -31,12 +34,13 @@ Table of Contents
 -----------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    install
-   test
-   modules
    examples
+   modules
+   test
+   
 
 Indices and tables
 ------------------
