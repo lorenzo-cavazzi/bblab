@@ -88,13 +88,13 @@ def overlay_channels(input_folder = None, output_folder = None, return_image = F
         files = _get_filenames_from_folder(input_folder)
         files.sort() # let's make RGB association deterministic for equal sets of names
     if len(files) != 3:
-        raise ValueError("3 files expected, {num} found").format(num=str(len(files)))
+        raise ValueError("3 files expected, {num} found".format(num=str(len(files))))
     extensions = set([file.suffix for file in files])
     # TODO: the following is NOT a good way to test file format. A Tiff image may not have
     # .tiff suffix, an a .tiff suffix doesn't mean file is a Tiff image. This is a
     # simplification but it also enforce to use proper file extensions
     if ".tiff" not in extensions or len(extensions) > 1:
-        raise ValueError("only .tiff files are accepted").format(num=str(len(files)))
+        raise ValueError("only .tiff files are accepted")
     log.info("working on the following input files: {names}".format(names=[str(file.absolute()) for file in files]))
 
     # get files, apply transformations (where needed) and create RGB image
@@ -181,9 +181,11 @@ def highlight_cells(input_folder_rgb = None, input_folder_mask = None,
             cells as opaque as possible without losing the information that
             distinguish single cells. Cell ids are changed in the process, but
             image may appear much better.
-        **input_file_rgb (str): input Png RGB image path.
+        **input_file_rgb (str): input Png RGB image path. This parameter is ignored
+            when `input_data_rgb` is provided.
         **input_data_rgb: numpy array with the Png RGB image data.
-        **input_file_mask (str): input Tiff mask image path.
+        **input_file_mask (str): input Tiff mask image path. This parameter is ignored
+            when `input_data_mask` is provided.
         **input_data_mask: numpy array with the Tiff mask image data.
         **output_file (str): output image path. If it doesn't end with .png, the
             extension will be added.
@@ -215,9 +217,75 @@ def highlight_cells(input_folder_rgb = None, input_folder_mask = None,
         >>> overlay_channels(cell_highlight = 2)
 	"""
 
-    print("highlight_cells stub")
-    raise NotImplementedError
+    # get input images
+    rgb_image = None
+    if "input_data_rgb" in kwargs:
+        rgb_image = kwargs["input_data_rgb"]
+    elif "input_file_rgb" in kwargs:
+        rgb_files = _get_validated_filenames(kwargs["input_file_rgb"])
+    else:
+        if input_folder_rgb is None:
+            input_folder_rgb = "."
+        rgb_files = _get_filenames_from_folder(input_folder_rgb)
+    if rgb_image is None:
+        if len(rgb_files) != 1:
+            raise ValueError("1 rgb file expected, {num} found".format(num=str(len(rgb_files))))
+        if rgb_files[0].suffix != ".png":
+            raise ValueError("only .png extension is accepted")
+        log.info("working on the following rgb file: {name}".format(name=str(rgb_files[0].absolute())))
+        rgb_image = cv2.imread(str(rgb_files[0]), cv2.IMREAD_UNCHANGED)
+    mask_image = None
+    if "input_data_mask" in kwargs:
+        mask_image = kwargs["input_data_mask"]
+    elif "input_data_rgb" in kwargs:
+        mask_files = _get_validated_filenames(kwargs["input_data_rgb"])
+    else:
+        if input_folder_mask is None:
+            input_folder_mask = "."
+        mask_files = _get_filenames_from_folder(input_folder_mask)
+    if mask_image is None:
+        if len(mask_files) != 1:
+            raise ValueError("1 Tiff mask expected, {num} found".format(num=str(len(mask_files))))
+        if mask_files[0].suffix != ".tiff":
+            raise ValueError("only .tiff extension is accepted")
+        log.info("working on the following mask file: {name}".format(name=str(mask_files[0].absolute())))
+        mask_image = cv2.imread(str(mask_files[0]), cv2.IMREAD_UNCHANGED)
 
+    # compute transparency channel from mask
+    log_info = "mask channel identifies {num} different cells".format(num=str(len(numpy.unique(mask_image)) - 1))
+    if cells_highlight == 2:
+        # the idea is to highlight cells as much as possible, preserving the possibility
+        # to distinguish them looking the transparency channel
+        log_info += "; cells highlighting algorithm will modify cell_id information stored in the transparency channel"
+        mask_type = numpy.iinfo(mask_image.dtype)
+        if numpy.max(mask_image) < mask_type.max:
+            channel_a = mask_type.max + 1 - mask_image
+            channel_a[channel_a > mask_type.max] = 0
+            channel_a = channel_a.astype(mask_type)
+    elif cells_highlight == 1:
+        log_info += "; cells highlighting algorithm will remove cell_id information from transparency channel"
+        channel_a = numpy.copy(mask_image)
+        channel_a[channel_a > 0] = mask_type.max
+    else:
+        channel_a = mask_image
+    log.info(log_info)
+
+    # create RGBA image, save and/or return it
+    channel_b, channel_g, channel_r = cv2.split(rgb_image)
+    highlight_image = cv2.merge((channel_b, channel_g, channel_r, channel_a))
+    if "output_file" in kwargs:
+        highlight_file = _validate_filename(kwargs["output_file"], ".png")
+    elif output_folder is not False:
+        if (output_folder is None):
+            output_folder = "."
+        highlight_file = _build_validated_filename(output_folder, "highlight.png")
+    else:
+        highlight_file = None
+    if highlight_file is not None:
+        cv2.imwrite(str(highlight_file), highlight_image)
+        log.info("writing file '{file}'".format(file = str(highlight_file)))
+    if return_image:
+        return highlight_image
 
 def compute_mean(input_folder = None, output_folder = None, return_data = False,
         **kwargs):

@@ -39,10 +39,10 @@ class TestProcessing(unittest.TestCase):
                 "Channels images not available for tests")
         self.assertEqual(len(os.listdir(str(Path(FOLDER_OVERLAY)))), 1,
                 "Overlay image not available for tests")
-        # self.assertEqual(len(os.listdir(str(Path(FOLDER_MASK)))), 1,
-        #         "Mask image not available for tests")
-        # self.assertEqual(len(os.listdir(str(Path(FOLDER_HIGHLIGHT)))), 1,
-        #         "Highlight image not available for tests")
+        self.assertEqual(len(os.listdir(str(Path(FOLDER_MASK)))), 1,
+                "Mask image not available for tests")
+        self.assertEqual(len(os.listdir(str(Path(FOLDER_HIGHLIGHT)))), 1,
+                "Highlight image not available for tests")
         # self.assertEqual(len(os.listdir(str(Path(FOLDER_MEAN)))), 1,
         #         "Mean Csv not available for tests")
 
@@ -78,10 +78,12 @@ class TestProcessing(unittest.TestCase):
         image_loaded = cv2.imread(str(files_loaded[0]), cv2.IMREAD_UNCHANGED)
         self.assertTrue((image_processed == image_loaded).all())
 
-    @unittest.expectedFailure
     def test_highlight_cells(self):
-        self.assertRaises(processing.highlight_cells(), "Update the test, it is a placeholder for a not-already-implemented function")
-
+        image_processed = processing.highlight_cells(FOLDER_OVERLAY, FOLDER_MASK, FOLDER_HIGHLIGHT, return_image = True)
+        files_loaded = processing._get_filenames_from_folder(FOLDER_HIGHLIGHT)
+        image_loaded = cv2.imread(str(files_loaded[0]), cv2.IMREAD_UNCHANGED)
+        self.assertTrue((image_processed == image_loaded).all())
+        
     @unittest.expectedFailure
     def test_compute_mean(self):
         self.assertRaises(processing.compute_mean(), "Update the test, it is a placeholder for a not-already-implemented function")
