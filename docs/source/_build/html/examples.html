@@ -68,7 +68,7 @@ We assume Tiff files from our sample set to be available in <cite>data/1i_channe
 <ol class="arabic">
 <li><dl class="first docutils">
 <dt>Overlay channels</dt>
-<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">bblab.image</span> <span class="k">import</span> <span class="n">processing</span> <span class="c1"># optional, you can use bblab.image.processing</span>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">bblab.image</span> <span class="k">import</span> <span class="n">processing</span> <span class="c1"># or use bblab.image.processing</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">processing</span><span class="o">.</span><span class="n">overlay_channels</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;data/1i_channels&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;data/output1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -101,29 +101,42 @@ all the information from the Tiff channels without modifying it. Nevertheless, t
 images are not very interesting at a first glance because they are too dark to allow
 humans to identity any features.</p>
 <p>There are a number of parameters to modify channels intensity. We can try to maximize
-all of them, and further appling a multiplier on</p>
+all of them, and further applying a multiplier on every single channel</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">processing</span><span class="o">.</span><span class="n">overlay_channels</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;data/1i_channels&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;data/output1&quot;</span><span class="p">,</span>
 <span class="go">        maximize_intensity = True, r_channel_multiplier = 50,</span>
 <span class="go">        g_channel_multiplier = 2, b_channel_multiplier = 5)</span>
 </pre></div>
 </div>
 <p>Now the cells appear more identifiable, but we lose some information in the process:
-some full-green pixels are in fact from original intensities even more than 10 times
-different.</p>
+some full-green pixels are in fact from intensities that were originally different
+by a factor 10 or more.</p>
 <p>We can also improve the cell highlighting by applying an algorithm that tries to
 preserve the information about single pixel cells identification. This time we will
-lose the correspondence between origianl cell id and final transparency channel value.</p>
+lose the correspondence between original cell id and final transparency channel value.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">processing</span><span class="o">.</span><span class="n">highlight_cells</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;data/output1&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;data/2i_mask&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;data/output2&quot;</span><span class="p">,</span>
 <span class="go">        cells_highlight = 2)</span>
 </pre></div>
 </div>
-<p>The final step will yield to different numbers.</p>
+<p>We can easily identify the cells. Given a transparency channel of 16 bits, the
+difference of up to 680 (the number of different cells) is negligible for a human
+eye.</p>
+<p>The final step yields to different numbers, but this is inevitable if we always
+take only the Png images from the previous step because we lost information in
+the first step.</p>
+</div>
+</div>
+<div class="section" id="command-line">
+<h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p>Currently it’s possible to invoke bblab functions from the command line using
+<cite>python -c</cite> command on both Windows and Linux systems.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import bblab; bblab.image.processing.overlay_channels(r&#39;data/1i_channels&#39;, r&#39;data/output1&#39;)&quot;</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="explore">
-<h3>Explore<a class="headerlink" href="#explore" title="Permalink to this headline">¶</a></h3>
+<h2>Explore<a class="headerlink" href="#explore" title="Permalink to this headline">¶</a></h2>
 <p>You can play with the values in the examples to obtain different results. The next topic
 lists all available methods with their parameters and some other examples. Enjoy :)</p>
-</div>
 </div>
 </div>
 
@@ -139,9 +152,10 @@ lists all available methods with their parameters and some other examples. Enjoy
 <li><a class="reference internal" href="#python">Python</a><ul>
 <li><a class="reference internal" href="#assignment">Assignment</a></li>
 <li><a class="reference internal" href="#improvements">Improvements</a></li>
-<li><a class="reference internal" href="#explore">Explore</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#command-line">Command line</a></li>
+<li><a class="reference internal" href="#explore">Explore</a></li>
 </ul>
 </li>
 </ul>

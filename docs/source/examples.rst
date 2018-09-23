@@ -70,8 +70,17 @@ The final step yields to different numbers, but this is inevitable if we always
 take only the Png images from the previous step because we lost information in
 the first step.
 
+Command line
+-------------
+
+Currently it's possible to invoke bblab functions from the command line using
+`python -c` command on both Windows and Linux systems.
+
+>>> python -c "import bblab; bblab.image.processing.overlay_channels(r'data/1i_channels', r'data/output1')"
+
+
 Explore
-````````
+--------
 
 You can play with the values in the examples to obtain different results. The next topic
 lists all available methods with their parameters and some other examples. Enjoy :)

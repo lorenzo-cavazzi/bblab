@@ -18,7 +18,7 @@ your version by typing
 >>> python --version
 Python 3.6.5
 
-In some linux distributions (like `Ubuntu <https://www.ubuntu.com/>`_ 18.04) you
+In some Linux distributions (like `Ubuntu <https://www.ubuntu.com/>`_ 18.04) you
 can use Python 3 by invoking `python3` instead of `python`. This helps to maintain
 compatibility with legacy software which expect `python` to invoke Python 2.
 
@@ -42,7 +42,7 @@ typing
 >>> pip --version
 pip 18.0 from [...]
 
-In some linux distributions (like Ubuntu 18.04) you can use pip by invoking `pip3`
+In some Linux distributions (like Ubuntu 18.04) you can use pip by invoking `pip3`
 instead of `pip`.
 
 If `Git <https://git-scm.com/>`_ is not installed on your system you will get an error

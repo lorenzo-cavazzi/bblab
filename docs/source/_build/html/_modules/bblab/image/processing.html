@@ -46,6 +46,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
 
 <span class="c1"># TODO: Logging should be implemented at module level. It has temporary been added</span>
@@ -388,14 +389,44 @@
     <span class="n">cell_ids</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">cell_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">del</span> <span class="n">cell_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cell_means</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">cell_id</span> <span class="ow">in</span> <span class="n">cell_ids</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="n">mean_r</span> <span class="o">=</span> <span class="n">_get_channel_mean</span><span class="p">(</span><span class="n">channel_r</span><span class="p">,</span> <span class="n">channel_a</span> <span class="o">==</span> <span class="n">cell_id</span><span class="p">)</span>
+        <span class="n">mean_g</span> <span class="o">=</span> <span class="n">_get_channel_mean</span><span class="p">(</span><span class="n">channel_g</span><span class="p">,</span> <span class="n">channel_a</span> <span class="o">==</span> <span class="n">cell_id</span><span class="p">)</span>
+        <span class="n">mean_b</span> <span class="o">=</span> <span class="n">_get_channel_mean</span><span class="p">(</span><span class="n">channel_b</span><span class="p">,</span> <span class="n">channel_a</span> <span class="o">==</span> <span class="n">cell_id</span><span class="p">)</span>
+        <span class="c1"># cell_means.append((cell_id, mean_r, mean_g, mean_b))</span>
+        <span class="n">cell_means</span><span class="o">.</span><span class="n">append</span><span class="p">({</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">:</span> <span class="n">cell_id</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="n">mean_r</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">:</span> <span class="n">mean_g</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="n">mean_b</span><span class="p">})</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;compute_mean stub&quot;</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
+    <span class="c1"># save and/or return values</span>
+    <span class="k">if</span> <span class="s2">&quot;output_file&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">mean_file</span> <span class="o">=</span> <span class="n">_validate_filename</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;output_file&quot;</span><span class="p">],</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">output_folder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">output_folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">output_folder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+        <span class="n">mean_file</span> <span class="o">=</span> <span class="n">_build_validated_filename</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="s2">&quot;cell_means.csv&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mean_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">mean_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">cell_means</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">mean_file</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="n">dict_writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">fieldnames</span> <span class="o">=</span> <span class="n">keys</span><span class="p">)</span>
+            <span class="n">dict_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+            <span class="n">dict_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">cell_means</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;writing file &#39;</span><span class="si">{file}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_file</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">return_data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cell_means</span></div>
 
 <span class="c1"># Auxiliary functions to get/write data</span>
+<span class="k">def</span> <span class="nf">_get_channel_mean</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">round_decimal</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get a numpy array n*m and a mask (bit) of the same size. Compute the mean</span>
+<span class="sd">    of values in the array not filtered by the mask</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">channel_masked</span> <span class="o">=</span> <span class="n">channel</span> <span class="o">*</span> <span class="n">mask</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">channel_masked</span><span class="p">[</span><span class="n">channel_masked</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;nan&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">round_decimal</span><span class="p">)</span>
+
 <span class="k">def</span> <span class="nf">_get_filenames_from_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;get the `folder` str, checks and returns children as list of Path</span>
 <span class="sd">    instances.&quot;&quot;&quot;</span>
