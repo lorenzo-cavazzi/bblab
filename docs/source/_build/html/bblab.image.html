@@ -1,0 +1,348 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bblab.image package &#8212; bblab  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tests" href="test.html" />
+    <link rel="prev" title="bblab package" href="bblab.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="test.html" title="Tests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="bblab.html" title="bblab package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">bblab  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >Api</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="bblab.html" accesskey="U">bblab package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bblab-image-package">
+<h1>bblab.image package<a class="headerlink" href="#bblab-image-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bblab.image.processing">
+<span id="bblab-image-processing-module"></span><h2>bblab.image.processing module<a class="headerlink" href="#module-bblab.image.processing" title="Permalink to this headline">¶</a></h2>
+<p>This module contains functions to analyze single channel images from microscopes.</p>
+<dl class="function">
+<dt id="bblab.image.processing.compute_mean">
+<code class="descclassname">bblab.image.processing.</code><code class="descname">compute_mean</code><span class="sig-paren">(</span><em>input_folder=None</em>, <em>output_folder=None</em>, <em>return_data=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bblab/image/processing.html#compute_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bblab.image.processing.compute_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the mean of each color channel for every cell identified by the
+transparency channel. The final table may be returned as a list of dictionaries
+or saved in a Csv file.
+Input Png is supposed to bo a 32 or 64 bits RGBA image where the transparency
+channel holds the cell id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_folder</strong> (<em>str</em>) – folder path containing the Png RGBA image. If None,
+the current folder is used.
+This parameter is ignored when <cite>input_file</cite> or <cite>input_data</cite> is provided.</li>
+<li><strong>output_folder</strong> (<em>str</em>) – folder path where output Csv will be saved. If None, the
+current folder is used. If False, output won’t be saved (useful when
+<cite>return_data</cite> is True).
+This parameter is ignored when <cite>output_file</cite> is provided.</li>
+<li><strong>return_data</strong> (<em>bool</em>) – defines if data are returned. Can’t be False if an output
+file or folder is not provided.</li>
+<li><strong>**input_file</strong> (<em>str</em>) – input Png RGBA path. This parameter is ignored when
+<cite>input_data</cite> is provided.</li>
+<li><strong>**input_data</strong> (<em>str</em>) – numpy array with the Png RGBA image data.</li>
+<li><strong>**output_file</strong> (<em>str</em>) – output Csv path. If it doesn’t end with .csv, the
+extension will be added.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">if <cite>return_data</cite> is True, it returns the Csv file containing R-G-B channels
+mean for every cell_id.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Get image from specific input folders, save the data in output folder</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_mean</span><span class="p">(</span><span class="s2">&quot;output/highlight/&quot;</span><span class="p">,</span> <span class="s2">&quot;output/mean/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Get images from path, output result as a list of dictionaries</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">highlight_cells</span><span class="p">(</span><span class="n">input_file_rgb</span><span class="o">=</span><span class="s2">&quot;overlay_rgb.png&quot;</span><span class="p">,</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bblab.image.processing.highlight_cells">
+<code class="descclassname">bblab.image.processing.</code><code class="descname">highlight_cells</code><span class="sig-paren">(</span><em>input_folder_rgb=None</em>, <em>input_folder_mask=None</em>, <em>output_folder=None</em>, <em>return_image=False</em>, <em>cells_highlight=0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bblab/image/processing.html#highlight_cells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bblab.image.processing.highlight_cells" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Highlight single cells from a Png RGB image and a Tiff single channel mask.</dt>
+<dd>The finaly image may be returned as a numpy array and/or saved as a Png file.</dd>
+<dt>Input Png is supposed to be a 24 or 48 bits RGB image, input Tiff a 8 or 16 bit</dt>
+<dd>single channel segmentation mask.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_folder_rgb</strong> (<em>str</em>) – folder path containing the input Png RGB image.
+If None, the current folder is used.
+This parameter is ignored when <cite>input_file_rgb</cite> or <cite>input_data_rgb</cite>
+is provided.</li>
+<li><strong>input_folder_mask</strong> (<em>str</em>) – folder path containing the input Tiff mask image.
+If None, the current folder is used.
+This parameter is ignored when <cite>input_file_mask</cite> or <cite>input_data_mask</cite>
+is provided.</li>
+<li><strong>output_folder</strong> (<em>str</em>) – folder path where output image will be saved. If None, the
+current folder is used. If False, output won’t be saved (useful when
+<cite>return_image</cite> is True).
+This parameter is ignored when <cite>output_file</cite> is provided.</li>
+<li><strong>return_image</strong> (<em>bool</em>) – defines if image is returned. Can’t be False if an output
+file or folder is not provided.</li>
+<li><strong>cells_highlight</strong> (<em>int</em>) – defines the highlighting method.
+0 (default): apply the mask as transparency layer. All information from the
+mask is preserved, but image may be almost all trasparent.
+1 (opaque cells): cells are identified from mask and made opaque. All
+information about single cells is lost.
+2 (emphasize cells): the transparency mask is modified to try to make
+cells as opaque as possible without losing the information that
+distinguish single cells. Cell ids are changed in the process, but
+image may appear much better.</li>
+<li><strong>**input_file_rgb</strong> (<em>str</em>) – input Png RGB image path. This parameter is ignored
+when <cite>input_data_rgb</cite> is provided.</li>
+<li><strong>**input_data_rgb</strong> – numpy array with the Png RGB image data.</li>
+<li><strong>**input_file_mask</strong> (<em>str</em>) – input Tiff mask image path. This parameter is ignored
+when <cite>input_data_mask</cite> is provided.</li>
+<li><strong>**input_data_mask</strong> – numpy array with the Tiff mask image data.</li>
+<li><strong>**output_file</strong> (<em>str</em>) – output image path. If it doesn’t end with .png, the
+extension will be added.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><dl class="docutils">
+<dt>if <cite>return_image</cite> is True, it returns the numpy array representing the overlayed</dt>
+<dd><p class="first last">image.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p># Get images from specific input folders, save the result in output folder</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">highlight_cells</span><span class="p">(</span><span class="s2">&quot;output/mask/&quot;</span><span class="p">,</span> <span class="s2">&quot;data/overlay/&quot;</span><span class="p">,</span> <span class="s2">&quot;output/highlight/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Get images from paths, output result as a numpy array</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">highlight_cells</span><span class="p">(</span><span class="n">input_file_rgb</span><span class="o">=</span><span class="s2">&quot;overlay_rgb.png&quot;</span><span class="p">,</span>
+<span class="go">    input_data_rgb=&quot;mask.tiff&quot;, output_folder=False, return_image=True)</span>
+<span class="go">array([[[    0,    34,   347,     0],</span>
+<span class="go">[    0,     0,    59,     0],</span>
+<span class="go">[    0,     0,   167,     0],</span>
+<span class="go">...,</span>
+<span class="go">...,</span>
+<span class="go">[13480,    11,  6736,     0],</span>
+<span class="go">[ 8295,    23,  5622,     0],</span>
+<span class="go">[  622,     0,   419,     0]]], dtype=uint16)</span>
+</pre></div>
+</div>
+<p>Read and write in current folder, change cell highlight method</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">overlay_channels</span><span class="p">(</span><span class="n">cell_highlight</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bblab.image.processing.overlay_channels">
+<code class="descclassname">bblab.image.processing.</code><code class="descname">overlay_channels</code><span class="sig-paren">(</span><em>input_folder=None</em>, <em>output_folder=None</em>, <em>return_image=False</em>, <em>maximize_intensity=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bblab/image/processing.html#overlay_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bblab.image.processing.overlay_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overlay 3 single channel Tiff images in a RGB image. The finaly image may be
+returned as a numpy array and/or saved as a Png file.
+Input images are supposed to be 8 or 16 bit single channel scans from a microscope.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_folder</strong> (<em>str</em>) – folder path containing the 3 input Tiff images. If None,
+the current folder is used.
+This parameter is ignored when <cite>input_files</cite> is provided.</li>
+<li><strong>output_folder</strong> (<em>str</em>) – folder path where output image will be saved. If None, the
+current folder is used. If False, output won’t be saved (useful when
+<cite>return_image</cite> is True).
+This parameter is ignored when <cite>output_file</cite> is provided.</li>
+<li><strong>return_image</strong> (<em>bool</em>) – defines if image is returned. Can’t be False if an output
+file or folder is not provided.</li>
+<li><strong>maximize_intensity</strong> (<em>bool</em>) – defines if each channell intensity must use all
+the available depth. The ratio will be preserved for each channel, but not
+between them. Please use the <cite>x_channel_multiplier</cite> variables to further
+adjust each single channel intensity.</li>
+<li><strong>**input_files</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – list of Tiff images paths</li>
+<li><strong>**output_file</strong> (<em>str</em>) – output image path. If it doesn’t end with .png, the
+extension will be added.</li>
+<li><strong>**r_channel_multiplier</strong> (<em>float</em>) – red channel intensity multiplier. If
+<cite>maximize_intensity</cite> is True, this will be applied after that transformation.</li>
+<li><strong>**g_channel_multiplier</strong> (<em>float</em>) – green channel intensity multiplier. If
+<cite>maximize_intensity</cite> is True, this will be applied after that transformation.</li>
+<li><strong>**b_channel_multiplier</strong> (<em>float</em>) – blue channel intensity multiplier. If
+<cite>maximize_intensity</cite> is True, this will be applied after that transformation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><dl class="docutils">
+<dt>if <cite>return_image</cite> is True, it returns the numpy array representing the overlayed</dt>
+<dd><p class="first last">image.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Overlay images from input folder, save the result in output folder</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">overlay_channels</span><span class="p">(</span><span class="s2">&quot;data/channels/&quot;</span><span class="p">,</span> <span class="s2">&quot;output/overlay/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Overlay images from specific paths, output result as a numpy array</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">overlay_channels</span><span class="p">(</span><span class="n">input_files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;r.tiff&quot;</span><span class="p">,</span> <span class="s2">&quot;g.tiff&quot;</span><span class="p">,</span> <span class="s2">&quot;b.tiff&quot;</span><span class="p">],</span>
+<span class="go">    return_image=False, maximize_intensity=True)</span>
+<span class="go">array([[[    0,    34,   347],</span>
+<span class="go">[    0,     0,    59],</span>
+<span class="go">[    0,     0,   167],</span>
+<span class="go">...,</span>
+<span class="go">...,</span>
+<span class="go">[13480,    11,  6736],</span>
+<span class="go">[ 8295,    23,  5622],</span>
+<span class="go">[  622,     0,   419]]], dtype=uint16)</span>
+</pre></div>
+</div>
+<p>Read and write in current folder, enhance specific channels</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">overlay_channels</span><span class="p">(</span><span class="n">r_channel_multiplier</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">b_channel_multiplier</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bblab.image.processing.set_log_level">
+<code class="descclassname">bblab.image.processing.</code><code class="descname">set_log_level</code><span class="sig-paren">(</span><em>level=30</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bblab/image/processing.html#set_log_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bblab.image.processing.set_log_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define log level. Please consider this solution as temporary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<em>int</em>) – loggging level. Please use logging.DEBUG .INFO .WARNING
+.ERROR .CRITICAL from the <cite>logging</cite> module.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bblab.image">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bblab.image" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">bblab.image package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-bblab.image.processing">bblab.image.processing module</a></li>
+<li><a class="reference internal" href="#module-bblab.image">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bblab.html"
+                        title="previous chapter">bblab package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="test.html"
+                        title="next chapter">Tests</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/bblab.image.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="test.html" title="Tests"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="bblab.html" title="bblab package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">bblab  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >Api</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="bblab.html" >bblab package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lorenzo Cavazzi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+    </div>
+  </body>
+</html>

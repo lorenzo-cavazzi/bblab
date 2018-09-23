@@ -5,9 +5,9 @@ tmp*
 .vscode
 
 # Sphinx docs
-docs/source/_build
-docs/source/_static
-docs/source/_templates
+# docs/source/_build
+# docs/source/_static
+# docs/source/_templates
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
