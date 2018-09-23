@@ -1,5 +1,9 @@
 # bblab library
 
+[![Build Status](https://travis-ci.org/lorenzo-cavazzi/bblab.svg?branch=master)](https://travis-ci.org/lorenzo-cavazzi/bblab)
+[![Docs Status](https://readthedocs.org/projects/bblab/badge/?version=latest)](https://bblab.readthedocs.io)
+
+
 bblab library implements useful image processing algorithms for the bblab. It's still pretty basic but it's meant to be expanded in the near future. Stay tuned!
 
 ## Getting Started
