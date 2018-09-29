@@ -24,7 +24,7 @@ def set_log_level(level = logging.WARNING):
 
 def overlay_channels(input_folder = None, output_folder = None, return_image = False,
         maximize_intensity = False, **kwargs):
-    """Overlay 3 single channel Tiff images in a RGB image. The finaly image may be
+    """Overlay 3 single channel Tiff images in a RGB image. The final image may be
     returned as a numpy array and/or saved as a Png file.
     Input images are supposed to be 8 or 16 bit single channel scans from a microscope.
    

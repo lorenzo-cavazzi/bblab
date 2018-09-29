@@ -11,12 +11,17 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+
+# added default path for bblab library
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 print("*** from conf.py")
 print(os.path.abspath('../..'))
+
+# set readthedocs theme to the sphinx default, otherwise autodoc result
+# is not the best
+html_style = "/default.css"
 
 
 # -- Project information -----------------------------------------------------
