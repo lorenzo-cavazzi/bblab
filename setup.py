@@ -15,5 +15,10 @@ setup(
 	install_requires=[
 		"numpy",
 		"opencv-python"
-	]
+	],
+    entry_points = {
+        "console_scripts": [
+            "bblab = bblab.command:main"
+        ]
+    }
 )

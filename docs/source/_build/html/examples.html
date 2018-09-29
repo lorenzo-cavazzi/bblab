@@ -127,9 +127,28 @@ the first step.</p>
 </div>
 <div class="section" id="command-line">
 <h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
-<p>Currently it’s possible to invoke bblab functions from the command line using
-<cite>python -c</cite> command on both Windows and Linux systems.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import bblab; bblab.image.processing.overlay_channels(r&#39;data/1i_channels&#39;, r&#39;data/output1&#39;)&quot;</span>
+<p>The library gets installed along with a command line tool to be invoked from the shell.
+Try to type</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bblab</span> <span class="o">-</span><span class="n">h</span>
+<span class="go">usage: command [-h] {overlay_channels,highlight_cells,compute_mean} ...</span>
+<span class="go">bblab command line tool allows you to start bblab main functions from [...]</span>
+</pre></div>
+</div>
+<p>Every function has its own help description. As an example try typing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bblab</span> <span class="n">overlay_channels</span> <span class="o">-</span><span class="n">h</span>
+<span class="go">usage: command overlay_channels [-h] [-i INPUT_FOLDER] [-o OUTPUT_FOLDER]</span>
+<span class="go">[...]</span>
+</pre></div>
+</div>
+<p>Please note that only some function parameters are available while invoking functions
+from the command line.</p>
+<p>Here is an exmaple of how to use the command line <cite>bblab</cite> tool</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bblab</span> <span class="n">overlay_channels</span> <span class="o">-</span><span class="n">i</span> <span class="s2">&quot;data/1i_channels&quot;</span> <span class="o">-</span><span class="n">o</span> <span class="s2">&quot;data/output1&quot;</span> <span class="o">-</span><span class="nb">max</span> <span class="kc">True</span>
+<span class="go">bblab.image.processing.overlay_channels</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bblab</span> <span class="n">highlight_cells</span> <span class="o">-</span><span class="n">irgb</span> <span class="s2">&quot;data/output1&quot;</span> <span class="o">-</span><span class="n">imask</span> <span class="s2">&quot;data/2i_mask&quot;</span> <span class="o">-</span><span class="n">o</span> <span class="s2">&quot;data/output2&quot;</span> <span class="o">-</span><span class="n">ch</span> <span class="mi">2</span>
+<span class="go">bblab.image.processing.highlight_cells</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bblab</span> <span class="n">compute_mean</span> <span class="o">-</span><span class="n">i</span> <span class="s2">&quot;data/output2&quot;</span> <span class="o">-</span><span class="n">o</span> <span class="s2">&quot;data/output3&quot;</span>
+<span class="go">bblab.image.processing.compute_mean</span>
 </pre></div>
 </div>
 </div>

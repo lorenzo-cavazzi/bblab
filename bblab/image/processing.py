@@ -38,7 +38,7 @@ def overlay_channels(input_folder = None, output_folder = None, return_image = F
             This parameter is ignored when `output_file` is provided.
         return_image (bool): defines if image is returned. Can't be False if an output
             file or folder is not provided.
-        maximize_intensity (bool) : defines if each channell intensity must use all
+        maximize_intensity (bool) : defines if each channel intensity must use all
             the available depth. The ratio will be preserved for each channel, but not
             between them. Please use the `x_channel_multiplier` variables to further
             adjust each single channel intensity.

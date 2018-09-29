@@ -73,10 +73,30 @@ the first step.
 Command line
 -------------
 
-Currently it's possible to invoke bblab functions from the command line using
-`python -c` command on both Windows and Linux systems.
+The library gets installed along with a command line tool to be invoked from the shell.
+Try to type
 
->>> python -c "import bblab; bblab.image.processing.overlay_channels(r'data/1i_channels', r'data/output1')"
+>>> bblab -h
+usage: command [-h] {overlay_channels,highlight_cells,compute_mean} ...
+bblab command line tool allows you to start bblab main functions from [...]
+
+Every function has its own help description. As an example try typing
+
+>>> bblab overlay_channels -h
+usage: command overlay_channels [-h] [-i INPUT_FOLDER] [-o OUTPUT_FOLDER]
+[...]
+
+Please note that only some function parameters are available while invoking functions
+from the command line.
+
+Here is an exmaple of how to use the command line `bblab` tool
+
+>>> bblab overlay_channels -i "data/1i_channels" -o "data/output1" -max True
+bblab.image.processing.overlay_channels
+>>> bblab highlight_cells -irgb "data/output1" -imask "data/2i_mask" -o "data/output2" -ch 2
+bblab.image.processing.highlight_cells
+>>> bblab compute_mean -i "data/output2" -o "data/output3"
+bblab.image.processing.compute_mean
 
 
 Explore
