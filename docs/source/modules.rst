@@ -1,7 +1,7 @@
 Api
 ===
 
-Here you can explor the library APIs. Currently all the functions are in the
+Here you can explore the library APIs. Currently all the functions are in the
 bblab.image.processing module
 
 
